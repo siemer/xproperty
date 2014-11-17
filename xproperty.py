@@ -26,9 +26,8 @@ def get_property(window, name):
   if property_type == 'STRING':
     # strings should be served byte-wise
     assert property.format == 8;
+    # string arrays are separated by \x00; some have one at the end as well
     values = property.value.split('\x00')
-    # null-terminated, right?
-    assert values.pop() in (u'', '')
     return values
   else:
     raise NotImplementedError('I’m sorry, I can handle only STRINGs so far.')
