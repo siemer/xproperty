@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # coding: utf-8
+from __future__ import print_function
 
 import Xlib.display
 
@@ -33,6 +34,10 @@ def get_property(window, name):
     raise NotImplementedError('I’m sorry, I can handle only STRINGs so far.')
 
 if __name__ == '__main__':
-  import sys
+  import sys, pipes
   root_window = display.screen().root
-  print get_property(root_window, sys.argv[1])
+  property_name = sys.argv[1]
+  print(property_name, end=' ')
+  values = [pipes.quote(value) for value in
+              get_property(root_window, property_name)]
+  print(' '.join(values))
