@@ -33,11 +33,22 @@ def get_property(window, name):
   else:
     raise NotImplementedError('I’m sorry, I can handle only STRINGs so far.')
 
+def set_property(window, name, values):
+  property = atom_s2i(name)
+  value = '\x00'.join(values)
+  window.change_property(property, atom_s2i('STRING'), 8, str(value))
+ 
 if __name__ == '__main__':
   import sys, pipes
   root_window = display.screen().root
-  property_name = sys.argv[1]
-  print(property_name, end=' ')
-  values = [pipes.quote(value) for value in
-              get_property(root_window, property_name)]
-  print(' '.join(values))
+  l = len(sys.argv)
+  if l <= 1:
+    print('No property name given on command line.')
+  elif l >= 2:
+    property_name = sys.argv[1]
+    if l >= 3:
+      set_property(root_window, property_name, sys.argv[2:])
+    # a final get in any case
+    values = [pipes.quote(value) for value in
+                get_property(root_window, property_name)]
+    print(property_name, *values)
